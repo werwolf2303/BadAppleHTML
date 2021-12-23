@@ -1,0 +1,65 @@
+<body style="background-color:black">
+<pre id="screen" style="color:white;background-color:black;height:16px;width:120px;"></pre>
+<div id="results"></div>
+<button id="but" onclick="start()">BadApple</button>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+var stop = false;
+var frameCount = 0;
+var $results = $("#results");
+var fps, fpsInterval, startTime, now, then, elapsed;
+
+
+function startAudio() {
+    var aud = new Audio("audio.wav");
+    aud.play();
+}
+function start() {
+    startAudio();
+    startAnimating(30);
+    document.getElementById("but").style.display="none";
+}
+
+function startAnimating(fps) {
+    fpsInterval = 1000 / fps;
+    then = Date.now();
+    startTime = then;
+    console.log(startTime);
+    animate();
+}
+var image = 1;
+
+function animate() {
+
+    // stop
+    if (stop) {
+        return;
+    }
+
+    // request another frame
+
+    requestAnimationFrame(animate);
+
+    // calc elapsed time since last loop
+
+    now = Date.now();
+    elapsed = now - then;
+
+    // if enough time has elapsed, draw the next frame
+
+    if (elapsed > fpsInterval) {
+
+        // Get ready for next frame by setting then=now, but...
+        // Also, adjust for fpsInterval not being multiple of 16.67
+        then = now - (elapsed % fpsInterval);
+
+        // draw stuff here
+
+        // TESTING...Report #seconds since start and achieved fps.
+        $.get("convert/"+image+".txt",function(txt){
+        document.getElementById("screen").innerHTML=txt.replace("."," ")+"<br>";
+    }); 
+        image=image+1;
+    }
+}
+</script>
