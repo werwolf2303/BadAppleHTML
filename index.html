@@ -15,20 +15,42 @@ function startAudio() {
     aud.play();
 }
 function start() {
-    startAudio();
     startAnimating(30);
     document.getElementById("but").style.display="none";
+}
+var is3DS = false;
+var agent = navigator.userAgent;
+if(navigator.userAgent=="Mozilla/5.0 (New Nintendo 3DS like iPhone) AppleWebKit/536.30 (KHTML, like Gecko) NX/3.0.0.5.24 Mobile NintendoBrowser/1.12.10178.EU") {
+    is3DS = true;
 }
 
 function startAnimating(fps) {
     fpsInterval = 1000 / fps;
     then = Date.now();
     startTime = then;
+    console.log("Is 3DS: " + is3DS);
     console.log(startTime);
-    animate();
+    if(is3DS) {
+        alert("Nix BadApple")
+    }else{
+        animate();
+    }
 }
 var image = 1;
-
+function animate3DS() {
+    var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("screen").innerHTML =
+      this.responseText;
+      image=image+1;
+    }
+  };
+  xmlhttp.open("GET", "convert/" + image + ".txt", true);
+  xmlhttp.send();
+window.setTimeout(animate3DS,30);
+}
+first = true;
 function animate() {
 
     // stop
@@ -41,7 +63,10 @@ function animate() {
     requestAnimationFrame(animate);
 
     // calc elapsed time since last loop
-
+    if(first) {
+                startAudio();
+                first=false;
+            }
     now = Date.now();
     elapsed = now - then;
 
