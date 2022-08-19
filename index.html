@@ -1,90 +1,10 @@
-<body style="background-color:black">
-<pre id="screen" style="color:white;background-color:black;height:16px;width:120px;"></pre>
-<div id="results"></div>
-<button id="but" onclick="start()">BadApple</button>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script>
-var stop = false;
-var frameCount = 0;
-var $results = $("#results");
-var fps, fpsInterval, startTime, now, then, elapsed;
-
-
-function startAudio() {
-    var aud = new Audio("audio.wav");
-    aud.play();
-}
-function start() {
-    startAnimating(30);
-    document.getElementById("but").style.display="none";
-}
-var is3DS = false;
-var agent = navigator.userAgent;
-if(navigator.userAgent=="Mozilla/5.0 (New Nintendo 3DS like iPhone) AppleWebKit/536.30 (KHTML, like Gecko) NX/3.0.0.5.24 Mobile NintendoBrowser/1.12.10178.EU") {
-    is3DS = true;
-}
-
-function startAnimating(fps) {
-    fpsInterval = 1000 / fps;
-    then = Date.now();
-    startTime = then;
-    console.log("Is 3DS: " + is3DS);
-    console.log(startTime);
-    if(is3DS) {
-        alert("Nix BadApple")
-    }else{
-        animate();
-    }
-}
-var image = 1;
-function animate3DS() {
-    var xmlhttp = new XMLHttpRequest();
-  xmlhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("screen").innerHTML =
-      this.responseText;
-      image=image+1;
-    }
-  };
-  xmlhttp.open("GET", "convert/" + image + ".txt", true);
-  xmlhttp.send();
-window.setTimeout(animate3DS,30);
-}
-first = true;
-function animate() {
-
-    // stop
-    if (stop) {
-        return;
-    }
-
-    // request another frame
-
-    requestAnimationFrame(animate);
-
-    // calc elapsed time since last loop
-    if(first) {
-                startAudio();
-                first=false;
-            }
-    now = Date.now();
-    elapsed = now - then;
-
-    // if enough time has elapsed, draw the next frame
-
-    if (elapsed > fpsInterval) {
-
-        // Get ready for next frame by setting then=now, but...
-        // Also, adjust for fpsInterval not being multiple of 16.67
-        then = now - (elapsed % fpsInterval);
-
-        // draw stuff here
-
-        // TESTING...Report #seconds since start and achieved fps.
-        $.get("convert/"+image+".txt",function(txt){
-        document.getElementById("screen").innerHTML=txt.replace("."," ")+"<br>";
-    }); 
-        image=image+1;
-    }
-}
-</script>
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>BadApple HTML V2</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+        <script src="main.js"></script>
+        <script src="app.js"></script>
+    </head>
+    <body onload="initApp()"></body>
+</html>
