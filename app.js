@@ -1,3 +1,4 @@
+if (typeof Button == 'undefined') {document.body.innerHTML="<h2 style='color:red'>Please allow mixed content in your browser</h2>"} 
 var startstop = new Button();
 function initApp() {
     var content = new Div();
